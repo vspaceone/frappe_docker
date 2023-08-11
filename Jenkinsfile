@@ -1,15 +1,16 @@
 pipeline {    
-    agent { 
-        label 'linux' 
-    }
-    options {
-        ansiColor('xterm')
-    }
-    environment {
-    }
-    stages {
-        stage('Build new container') {	
-            var apps_json = """
+  agent { 
+      label 'linux' 
+  }
+  options {
+      ansiColor('xterm')
+  }
+  environment {
+  }
+  stages {
+    stage('Build new container') {	
+      script {
+        var apps_json = """
 [
   {
     "url": "https://github.com/frappe/payments",
@@ -26,18 +27,19 @@ pipeline {
 ]
 """
 
-            def apps_json_enc = sh(script: 'echo $outgoing_json | base64', returnStdout: true, returnStatus: true)
+        def apps_json_enc = sh(script: 'echo $outgoing_json | base64', returnStdout: true, returnStatus: true)
 
-            cmd "buildah build \\"
-                "--build-arg=FRAPPE_PATH=https://github.com/frappe/frappe \\"
-                "--build-arg=FRAPPE_BRANCH=version-14 \\"
-                "--build-arg=PYTHON_VERSION=3.10.12 \\"
-                "--build-arg=NODE_VERSION=16.20.1 \\"
-                "--build-arg=APPS_JSON_BASE64=$apps_json_enc \\"
-                "--tag=git.vspace.one/SpaceIT/frappe_docker/erpnext:1 \\"
-                "--file=images/custom/Containerfile ."
-
-        }
+        cmd """buildah build \\
+--build-arg=FRAPPE_PATH=https://github.com/frappe/frappe \\
+--build-arg=FRAPPE_BRANCH=version-14 \\
+--build-arg=PYTHON_VERSION=3.10.12 \\
+--build-arg=NODE_VERSION=16.20.1 \\
+--build-arg=APPS_JSON_BASE64=$apps_json_enc \\
+--tag=git.vspace.one/SpaceIT/frappe_docker/erpnext:1 \\
+--file=images/custom/Containerfile .
+"""
+      }
     }
+  }
 }
 
