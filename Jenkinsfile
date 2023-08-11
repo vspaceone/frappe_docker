@@ -9,8 +9,9 @@ pipeline {
   }
   stages {
     stage('Build new container') {	
-      script {
-        var apps_json = """
+      steps{
+        script {
+          var apps_json = """
 [
   {
     "url": "https://github.com/frappe/payments",
@@ -27,9 +28,9 @@ pipeline {
 ]
 """
 
-        def apps_json_enc = sh(script: 'echo $outgoing_json | base64', returnStdout: true, returnStatus: true)
+          def apps_json_enc = sh(script: 'echo $outgoing_json | base64', returnStdout: true, returnStatus: true)
 
-        cmd """buildah build \\
+          cmd """buildah build \\
 --build-arg=FRAPPE_PATH=https://github.com/frappe/frappe \\
 --build-arg=FRAPPE_BRANCH=version-14 \\
 --build-arg=PYTHON_VERSION=3.10.12 \\
@@ -38,8 +39,9 @@ pipeline {
 --tag=git.vspace.one/SpaceIT/frappe_docker/erpnext:1 \\
 --file=images/custom/Containerfile .
 """
+        }
       }
-    }
+    }  
   }
 }
 
