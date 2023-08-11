@@ -1,11 +1,12 @@
 pipeline {    
   agent { 
-      label 'linux' 
+    label 'linux' 
   }
   options {
-      ansiColor('xterm')
+    ansiColor('xterm')
   }
   environment {
+    TEST= "test"
   }
   stages {
     stage('Build new container') {	
