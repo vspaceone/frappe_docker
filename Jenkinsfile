@@ -6,7 +6,7 @@ pipeline {
     ansiColor('xterm')
   }
   environment {
-    TARGET_IMAGE_NAME= "git.vspace.one/spaceit/frappe_docker/erpnext:1"
+    TARGET_IMAGE_NAME= "git.vspace.one/spaceit/frappe_docker/erpnext:2"
   }
   stages {
     stage('Build new container') {	
@@ -20,7 +20,7 @@ pipeline {
   },
   {
     "url": "https://github.com/frappe/erpnext",
-    "branch": "version-14"
+    "branch": "version-15"
   },
   {
     "url": "https://github.com/frappe/non_profit",
@@ -41,9 +41,9 @@ pipeline {
 
           sh """buildah build \\
 --build-arg=FRAPPE_PATH=https://github.com/frappe/frappe \\
---build-arg=FRAPPE_BRANCH=version-14 \\
+--build-arg=FRAPPE_BRANCH=version-15 \\
 --build-arg=PYTHON_VERSION=3.10.12 \\
---build-arg=NODE_VERSION=16.20.1 \\
+--build-arg=NODE_VERSION=20.11.0 \\
 --build-arg=APPS_JSON_BASE64="$apps_json_enc" \\
 --tag=$TARGET_IMAGE_NAME \\
 --file=images/custom/Containerfile .
